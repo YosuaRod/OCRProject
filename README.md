@@ -7,6 +7,7 @@ Dado un conjunto de documentos escaneados se deberá buscar en ellos todos los q
 ·         Se ingresará el directorio que contiene los documentos
 
 ·         Se presentará en pantalla aquellos que cumplen con el criterio de búsqueda
-NOTA: librerias utilizadas aocr.jar
+NOTA: librerias utilizadas
+aocr.jar
 commons-io-2.5.jar
 AspriseJavaPDF.jar
