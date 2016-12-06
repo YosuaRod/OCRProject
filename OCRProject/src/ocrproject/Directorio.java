@@ -5,7 +5,11 @@
  */
 package ocrproject;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -15,21 +19,20 @@ import org.apache.commons.io.FilenameUtils;
 public class Directorio {
 
     private String ruta = "";
-    private String busqueda ="";
+    private String termino = "";
     private File[] archivos;
     private File fichero;
+    private String texto;
     private Lector l = new Lector();
-    
 
     public Directorio() {
 
     }
 
-    public Directorio(String s,String b) {
-        this.busqueda = b;
-         
-        this.ruta = s;
-        this.fichero = new File(ruta);
+    public Directorio(String ruta, String termino) {
+        this.termino = termino;
+        this.ruta = ruta;
+        this.fichero = new File(this.ruta);
         this.archivos = this.fichero.listFiles();
         Clasificacion(this.archivos);
     }
@@ -37,21 +40,24 @@ public class Directorio {
     public void Clasificacion(File[] archivos) {
         this.archivos = archivos;
         for (int x = 0; x < this.archivos.length; x++) {
-            File fichero = this.fichero;
-            fichero = this.archivos[x];
-            String ext = FilenameUtils.getExtension(fichero.toString());//obtener extención
+            
+            this.fichero = this.archivos[x];
+            String ext = FilenameUtils.getExtension(this.fichero.toString());//obtener extención
             ext = ext.toLowerCase();
             //System.out.println("LA EXTENSION ES " +ext);
             if (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")) {
-                
+
                 l.analisisOCR(fichero);
-                
-                
-                
+                this.texto = l.getTexto();
+//                System.out.println("ESTE ES EL TEXTO DE JPEG " + texto);
+                Buscador(texto,termino);
+
             } else if (ext.equals("pdf")) {
-                
+
                 l.analisisPDF(fichero);
-                
+                this.texto = l.getTexto();
+                Buscador(texto,termino);
+//                System.out.println("ESTE ES EL TEXTO DE PDF " + texto);
 
 //                analisisPDF a = new analisisPDF ();
             }
@@ -64,8 +70,24 @@ public class Directorio {
 //            }
 
         }
-        
+
         l.close();
+    }
+
+    public void Buscador(String texto, String termino) {
+        this.texto = texto;
+        this.termino = termino;
+        boolean res = l.getTexto().contains(termino);
+        if (res) {
+            try {
+                Desktop.getDesktop().open(fichero);
+            } catch (IOException ex) {
+                Logger.getLogger(Directorio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            System.out.println("TEXTO NO ENCONTRADO en " + fichero);
+        }
+
     }
 
     public String getRuta() {
@@ -85,12 +107,12 @@ public class Directorio {
         return s;
     }
 
-    public String getBusqueda() {
-        return this.busqueda;
+    public String getTermino() {
+        return termino;
     }
 
-    public void c(String busqueda) {
-        this.busqueda = busqueda;
+    public void setTermino(String termino) {
+        this.termino = termino;
     }
 
 }

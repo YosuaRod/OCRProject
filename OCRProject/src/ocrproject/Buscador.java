@@ -18,10 +18,11 @@ public class Buscador{
     public Buscador(){
  
     }
-    public void Encontrar(String s){
-        this.cad = s;
+    public void Encontrar(String cadena){
+        this.cad = cadena;
         Directorio dir = new Directorio();
-        System.out.println("PALABRA A BUSCAR "+ dir.getBusqueda());
+        this.termino = dir.getTermino();
+        System.out.println("PALABRA A BUSCAR "+this.termino );
         System.out.println("TEXTO DE ARCHIVO "+this.cad);
         
 //        boolean res = l.getTexto().contains(cad);
